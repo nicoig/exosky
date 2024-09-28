@@ -1,0 +1,8 @@
+streamlit
+pandas
+plotly
+astroquery
+astropy
+kaleido
+astroplan
+matplotlib
