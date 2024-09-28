@@ -84,9 +84,10 @@ def calcular_magnitud_aparente(magnitud_observada):
 
 estrellas_vis['magnitud_aparente'] = calcular_magnitud_aparente(estrellas_vis['phot_g_mean_mag'])
 
-# Visualización Interactiva del Cielo con Plotly
-st.header("🌟 Cielo Nocturno Interactivo")
+# Visualización 2D del Cielo Nocturno
+st.header("🌟 Cielo Nocturno Interactivo (2D)")
 
+# Función para crear el mapa estelar 2D (mantén tu función existente)
 def crear_mapa_estelar_mejorado(exoplaneta, estrellas_vis):
     tamano_estrellas = 20 / (estrellas_vis['magnitud_aparente'] + 5)
     
@@ -126,16 +127,63 @@ def crear_mapa_estelar_mejorado(exoplaneta, estrellas_vis):
 fig_mapa_estelar = crear_mapa_estelar_mejorado(exoplaneta, estrellas_vis)
 st.plotly_chart(fig_mapa_estelar, use_container_width=True)
 
-# Después de st.plotly_chart(fig_mapa_estelar, use_container_width=True)
-
 st.markdown("""
-**Explicación del Mapa Estelar:**
+**Explicación del Mapa Estelar 2D:**
 - **Ascensión Recta (eje X):** Representa la coordenada angular este-oeste de las estrellas en el cielo. Valores más bajos (hacia la izquierda) indican posiciones más hacia el oeste.
 - **Declinación (eje Y):** Representa la coordenada angular norte-sur de las estrellas. Valores más altos indican posiciones más hacia el norte en el cielo.
-- **Color de los puntos:** Indica la magnitud aparente de las estrellas. Los colores más brillantes (amarillo) representan estrellas que aparecen más brillantes desde el exoplaneta, mientras que los colores más oscuros (morado/azul) indican estrellas que se ven más tenues.
-- **Tamaño de los puntos:** También representa la magnitud aparente. Puntos más grandes indican estrellas que aparecen más brillantes desde el exoplaneta.
+- **Color de los puntos:** Indica la magnitud aparente de las estrellas. Los colores más brillantes representan estrellas que aparecen más brillantes desde el exoplaneta.
+- **Tamaño de los puntos:** También representa la magnitud aparente. Puntos más grandes indican estrellas que aparecen más brillantes.
 
-Este mapa muestra cómo se vería el cielo nocturno desde el exoplaneta seleccionado. La distribución y el brillo de las estrellas ofrecen una perspectiva única de cómo sería observar el universo desde un mundo distante, permitiendo comparar esta vista con nuestro cielo nocturno familiar en la Tierra.
+Este mapa 2D muestra la distribución de las estrellas en el cielo nocturno del exoplaneta, ofreciendo una vista plana similar a un mapa celeste tradicional.
+""")
+
+# Visualización 3D del Cielo Nocturno
+st.header("🌠 Exploración Tridimensional del Cielo (3D)")
+
+def crear_grafico_3d(estrellas_vis, exoplaneta):
+    fig = go.Figure(data=[go.Scatter3d(
+        x=estrellas_vis['ra'],
+        y=estrellas_vis['dec'],
+        z=estrellas_vis['phot_g_mean_mag'],
+        mode='markers',
+        marker=dict(
+            size=5,
+            color=estrellas_vis['phot_g_mean_mag'],
+            colorscale='Viridis',
+            opacity=0.8
+        ),
+        text=estrellas_vis['SOURCE_ID'],
+        hoverinfo='text'
+    )])
+
+    fig.update_layout(
+        title=f'Distribución 3D de estrellas visibles desde {exoplaneta["pl_name"]}',
+        scene=dict(
+            xaxis_title='Ascensión Recta',
+            yaxis_title='Declinación',
+            zaxis_title='Magnitud Aparente'
+        ),
+        height=700
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+crear_grafico_3d(estrellas_vis, exoplaneta)
+
+st.markdown("""
+**Explicación del gráfico 3D:**
+- **Eje X:** Ascensión Recta - posición este-oeste de la estrella en el cielo.
+- **Eje Y:** Declinación - posición norte-sur de la estrella en el cielo.
+- **Eje Z:** Magnitud Aparente - brillo percibido de la estrella desde el exoplaneta.
+- **Color:** También representa la Magnitud Aparente, facilitando la identificación visual del brillo.
+
+Este gráfico 3D expande la visualización 2D anterior, permitiendo una exploración más inmersiva del cielo nocturno del exoplaneta. Aquí puedes:
+1. Ver la distribución espacial de las estrellas en tres dimensiones.
+2. Apreciar cómo el brillo de las estrellas varía en diferentes partes del cielo.
+3. Interactuar con el gráfico rotándolo y haciendo zoom para explorar desde diferentes ángulos.
+4. Comparar fácilmente la densidad de estrellas brillantes y tenues en distintas regiones del cielo.
+
+La transición del mapa 2D a esta representación 3D ofrece una perspectiva más completa y envolvente de cómo sería observar el cielo desde este exoplaneta distante.
 """)
 
 # Distribución de Magnitudes Estelares
